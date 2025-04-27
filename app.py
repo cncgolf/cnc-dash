@@ -44,7 +44,7 @@ if follow_up_due:
     df = df[df['Follow Up Date'] <= pd.Timestamp.today()]
 
 # Correct columns matching the new Google Sheet
-expected_cols = ["Course Name", "Phone", "Notes", "Follow Up Date", "Website Address"]
+expected_cols = ["Course Name", "Phone", "Notes", "Follow Up Date", "Website Address", "Print Label"]
 available_cols = [col for col in expected_cols if col in df.columns]
 
 st.dataframe(df[available_cols], use_container_width=True)
