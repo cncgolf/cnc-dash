@@ -44,7 +44,7 @@ if follow_up_due:
     df = df[df['Follow Up Date'] <= pd.Timestamp.today()]
 
 # Display
-st.dataframe(df, use_container_width=True)
+st.dataframe(df[["Course Name", "Phone", "Notes", "Follow-Up Due", "Website Address"]], use_container_width=True)
 
 st.markdown("---")
 st.caption("Developed for Clubs n Covers Golf")
