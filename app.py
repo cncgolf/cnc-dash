@@ -6,7 +6,7 @@ def check_password():
     def password_entered():
         if st.session_state["password"] == st.secrets["password"]:
             st.session_state["password_correct"] = True
-            del st.session_state["password"]  # remove password from session state
+            del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
@@ -24,7 +24,7 @@ if not check_password():
     st.stop()
 # --- END OF PASSWORD PROTECTION ---
 
-# Streamlit app content
+# Main app starts here
 st.set_page_config(page_title='Clubs n Covers Outreach Tracker', layout='wide')
 st.title('🏌️ Clubs n Covers Golf Course Outreach Tracker')
 
@@ -33,7 +33,7 @@ sheet_url = st.secrets["sheet_url"]
 df = pd.read_csv(sheet_url)
 
 # Sidebar Filters
-status_filter = st.sidebar.selectbox('Filter by Status', ['All'] + sorted(df['Status'].dropna().unique().tolist()))
+status_filter = st.sidebar.selectbox('Filter by Status', ['All'] + sorted(df['Status'].dropna().unique()))
 follow_up_due = st.sidebar.checkbox('Show Only Follow-Ups Due')
 
 # Apply Filters
@@ -43,8 +43,11 @@ if follow_up_due:
     df['Follow Up Date'] = pd.to_datetime(df['Follow Up Date'], errors='coerce')
     df = df[df['Follow Up Date'] <= pd.Timestamp.today()]
 
-# Display
-st.dataframe(df[["Course Name", "Phone", "Notes", "Follow-Up Due", "Website Address"]], use_container_width=True)
+# Correct columns matching the new Google Sheet
+expected_cols = ["Course Name", "Phone", "Notes", "Follow Up Date", "Website Address"]
+available_cols = [col for col in expected_cols if col in df.columns]
+
+st.dataframe(df[available_cols], use_container_width=True)
 
 st.markdown("---")
 st.caption("Developed for Clubs n Covers Golf")
